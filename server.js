@@ -82,7 +82,7 @@
             );
         });
     };
-async function createDepartment () {
+async function createRole () {
         const roleName = await inquirer.prompt([
             {
                 type: 'input',
@@ -118,6 +118,47 @@ async function createDepartment () {
     };
 
 
+    async function createEmployee () {
+        const roleName = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'first_name',
+                message: 'Wha is the employees first name?'
+            },
+            {
+                type: 'input',
+                name: 'last_name',
+                message: 'Wha is the employees last name?'
+            },
+            {
+                type: 'number',
+                name: 'role_id',
+                message: 'What is the employees role ID?'
+            },
+            {
+                type: 'number',
+                name: 'manager_id',
+                message: 'What is the employees manager ID?'
+            },
+        ])
+        .then((answer) => {
+            connection.query(
+                'INSERT INTO employees SET ?',
+                {
+                first_name: answer.first_name,
+                last_name: answer.last_name,
+                role_id: answer.role_id,
+                manager_id: answer.manager_id
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log('A new department has been created successfully!');
+                    init();
+                }
+            );
+        });
+    };
+
 
             
         async function init(questions) {
@@ -143,8 +184,12 @@ async function createDepartment () {
             // console.log(deparmentName);
         }
         if(choice == options[4]){
+            createRole();
         }
-            createDepartment();
+        if(choice == options[5]){
+            createEmployee();
+        }
+           
         if(choice == options[0]){
             viewDepartments();
         }
