@@ -82,6 +82,43 @@
             );
         });
     };
+async function createDepartment () {
+        const roleName = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'title',
+                message: 'Wha is the name of the role?'
+            },
+            {
+                type: 'number',
+                name: 'salary',
+                message: 'Wha is the annual salary?'
+            },
+            {
+                type: 'number',
+                name: 'deptId',
+                message: 'What is the department ID?'
+            },
+        ])
+        .then((answer) => {
+            connection.query(
+                'INSERT INTO roles SET ?',
+                {
+                title: answer.title,
+                salary: answer.salary,
+                department_id: answer.deptId
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log('A new department has been created successfully!');
+                    init();
+                }
+            );
+        });
+    };
+
+
+
             
         async function init(questions) {
         // const answers = await inquirer.prompt(questions);
@@ -105,6 +142,9 @@
             // );
             // console.log(deparmentName);
         }
+        if(choice == options[4]){
+        }
+            createDepartment();
         if(choice == options[0]){
             viewDepartments();
         }
