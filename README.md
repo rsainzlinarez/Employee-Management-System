@@ -38,7 +38,7 @@
     Ruben
 
   ## Questions
-  [rsainzlinarez Github](https://github.com/rsainzlinarez/README-Generator)
+  [rsainzlinarez Github](https://github.com/rsainzlinarez/Employee-Management-System)
 
     For further questions regarding this application you can contact me at: rsainzlinarez@gmail.com
 
