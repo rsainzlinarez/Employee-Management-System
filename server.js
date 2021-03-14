@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const prompts = require('./model/prompts.js');
 const connection = require('./model/connection.js');
 const mysql = require('mysql');
+const { printTable } = require('console-table-printer');
 
 const options =  [
     'View Department',
@@ -12,7 +13,6 @@ const options =  [
     'Add Role',
     'Add Employee',
     'Update Employee Role',
-    'Return to Main Menu',
     'Exit',
 ]
 
@@ -28,30 +28,30 @@ const departmentName= {
 async function viewDepartments (){
     connection.query('SELECT * FROM departments', (err, res) => {
         if (err) throw err;
-        res.forEach(({ id, name }) => {
-            console.log(`${id}     |       ${name}          |`);
+        res.forEach(departments => {
+            `${departments.id}, ${departments.name}`;
         });
-        console.log('________________________________________');
+        printTable(res);
     });
 };
 //Function select data from roles table 
 async function viewRoles(){
     connection.query('SELECT * FROM roles', (err, res) => {
         if (err) throw err;
-        res.forEach(({ id, title, salary, department_id}) => {
-            console.log(`${id}   | ${title}|     ${salary}  | ${department_id}  |`);
-          });
-          console.log('________________________________________');
+        res.forEach(roles => {
+            `${roles.id}, ${roles.title}, ${roles.salary}, ${roles.department_id}`;
+        });
+        printTable(res);
         });
       };
 //Function select data from employees table
 async function viewEmployees(){
     connection.query('SELECT * FROM employees', (err, res) => {
         if (err) throw err;
-        res.forEach(({ id, first_name, last_name, role_id, manager_id}) => {
-            console.log(`${id} | ${first_name}| ${last_name} | ${role_id} | ${manager_id}`);
+        res.forEach(employees => {
+            `${employees.id}, ${employees.first_name}, ${employees.last_name}, ${employees.role_id}, ${employees.manager_id}`;
         });
-            console.log('_______________________________________');
+        printTable(res);
     });
 };
 
@@ -186,7 +186,6 @@ async function updateEmployeeRole () {
                         chosenItem = item;
                     }
                     console.log(chosenItem);
-
                 });
             connection.query(
                 'UPDATE employees SET ? WHERE ?',
@@ -196,10 +195,10 @@ async function updateEmployeeRole () {
                     },
                     {
                     id: chosenItem.id,
-                        },
+                    },
                     (err) => {
                         if (err) throw err;
-                        console.log('A new department has been created successfully!');
+                        console.log('Employee Role has been Updated Successfully!');
                             init();
                     },
                 ],
@@ -253,17 +252,16 @@ async function init(questions) {
             employeeDataWait()
         }
     if(choice == options[6]){
+        async function employeeUpdateDataWait(){
             updateEmployeeRole();
-            setTimeout(function afterTwoSeconds() {
-                init();
-            }, 100)
-                    }
+           
+        }
+        employeeUpdateDataWait();  
+      
+        }
     if(choice == options[7]){
-        init();
+           console.log('Goodbye...');
     }
-        if(choice == options[8]){
-           console.log('goodbye');
-         }
 }
 init(prompts);
 
