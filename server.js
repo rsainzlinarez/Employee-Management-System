@@ -82,6 +82,8 @@
             );
         });
     };
+    
+    // Function creates a new role
 async function createRole () {
         const roleName = await inquirer.prompt([
             {
@@ -117,7 +119,7 @@ async function createRole () {
         });
     };
 
-
+    // Function creates a new employee
     async function createEmployee () {
         const roleName = await inquirer.prompt([
             {
@@ -159,6 +161,62 @@ async function createRole () {
         });
     };
 
+    // Function updates employee roles
+    async function updateEmployeeRole () {
+        connection.query('SELECT * FROM employees', (err, results) => {
+        const roleName =  inquirer.prompt([
+            {
+                name: 'choice',
+                type: 'rawlist',
+                choices() {
+                    const choiceArray = [];
+                    results.forEach(({ first_name }) => {
+                      choiceArray.push(first_name);
+                    });
+                    return choiceArray;
+                  },
+                  message: 'What employee has changed role?',
+            },
+            {
+                name:'role',
+                type:'input',
+                message:'What is the new role ID?'
+            }
+        ])
+   .then((answer) => {
+       let chosenItem;
+
+      
+
+       results.forEach((item) => {
+        if(item.first_name === answer.choice){
+            chosenItem = item;
+        }
+        console.log(chosenItem);
+
+       });
+       
+       connection.query(
+        'UPDATE employees SET ? WHERE ?',
+        [
+        {
+        role_id: answer.role,
+        },
+        {
+            id: chosenItem.id,
+          },
+        (err) => {
+            if (err) throw err;
+            console.log('A new department has been created successfully!');
+            init();
+        },
+    ],
+    );
+
+   });
+     
+}); 
+};
 
             
         async function init(questions) {
@@ -183,12 +241,7 @@ async function createRole () {
             // );
             // console.log(deparmentName);
         }
-        if(choice == options[4]){
-            createRole();
-        }
-        if(choice == options[5]){
-            createEmployee();
-        }
+        
            
         if(choice == options[0]){
             viewDepartments();
@@ -198,6 +251,15 @@ async function createRole () {
         }
         if(choice == options[2]){
             viewEmployees();
+        }
+        if(choice == options[4]){
+            createRole();
+        }
+        if(choice == options[5]){
+            createEmployee();
+        }
+        if(choice == options[6]){
+            updateEmployeeRole();
         }
         
     }
